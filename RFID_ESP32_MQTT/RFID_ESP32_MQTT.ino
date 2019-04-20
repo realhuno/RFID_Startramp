@@ -20,16 +20,16 @@ const char* password = "startramp";
 const char* mqtt_server = "192.168.4.1";
 
 // Set your Static IP address
-IPAddress local_IP(192, 168, 4, 104);
+IPAddress local_IP(192, 168, 4, 102);
 // Set your Gateway IP address
 IPAddress gateway(192, 168, 4, 1);
 
 IPAddress subnet(255, 255, 0, 0);
 
-#define ARDUINO_CLIENT_ID "rfid_4"                     // Client ID for Arduino pub/sub
-#define PUB_TEMP "rfid_4/uuid"   // MTTQ topic for temperature [C]
-#define PUB_HUMID "rfid_4/time"             // MTTQ topic for humidity
-#define SUB_STATUS "rfid_4/status"                           // MTTQ topic for LED
+#define ARDUINO_CLIENT_ID "rfid_2"                     // Client ID for Arduino pub/sub
+#define PUB_TEMP "rfid_2/uuid"   // MTTQ topic for temperature [C]
+#define PUB_HUMID "rfid_2/time"             // MTTQ topic for humidity
+#define SUB_STATUS "rfid_2/status"                           // MTTQ topic for LED
 #define PUBLISH_DELAY 3000        
 
 
@@ -77,6 +77,20 @@ mfrc522.PCD_Init();
 void loop() 
 {
 
+  
+      int wifi_retry = 0;
+     while(WiFi.status() != WL_CONNECTED && wifi_retry < 5 ) {
+      wifi_retry++;
+      Serial.println("WiFi not connected. Try to reconnect");
+      WiFi.disconnect();
+  
+      delay(100);
+      setup_wifi();
+    }
+     if(wifi_retry >= 5) {
+      Serial.println("\nReboot");
+      ESP.restart();
+    }
 
 
 
